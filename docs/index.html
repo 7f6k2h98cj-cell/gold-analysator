@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Gold">
+<title>Mein Gold-Futures-Analysator</title>
+<style>
+  :root { color-scheme: dark light; }
+  body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 16px;
+         max-width: 720px; margin-inline: auto; background: #111; color: #eee; }
+  h1 { font-size: 1.4rem; margin: 8px 0 16px; }
+  h2 { font-size: 1.05rem; margin: 0 0 8px; }
+  .karte { background: #1c1c1e; border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+  .knopf { display: block; text-align: center; background: #d4a017; color: #000;
+           font-weight: 700; font-size: 1.1rem; padding: 16px; border-radius: 14px;
+           text-decoration: none; margin-bottom: 12px; }
+  .entscheidung { font-size: 2.2rem; font-weight: 800; text-align: center; padding: 12px 0; }
+  .LONG { color: #34c759; } .SHORT { color: #ff453a; } .KEIN { color: #ffd60a; }
+  .ok { color: #34c759; } .fehler { color: #ff453a; }
+  .klein { color: #999; font-size: 0.85rem; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 4px 0; vertical-align: top; }
+  td:last-child { text-align: right; }
+  ul { margin: 0; padding-left: 18px; }
+</style>
+</head>
+<body>
+<h1>Mein Gold-Futures-Analysator</h1>
+<a class="knopf" id="start" href="#">Neue Wochenanalyse starten</a>
+<div id="inhalt" class="karte">Lade …</div>
+<script>
+const user = location.hostname.split(".")[0];
+const repo = location.pathname.split("/")[1] || "gold-analysator";
+document.getElementById("start").href =
+  "https://github.com/" + user + "/" + repo + "/actions/workflows/analyse.yml";
+
+function el(tag, text, cls) {
+  const e = document.createElement(tag);
+  if (text !== undefined) e.textContent = text;
+  if (cls) e.className = cls;
+  return e;
+}
+function karte(titel) {
+  const k = el("div", undefined, "karte");
+  k.appendChild(el("h2", titel));
+  document.body.insertBefore(k, document.getElementById("hinweis"));
+  return k;
+}
+function zeile(tab, a, b, cls) {
+  const tr = document.createElement("tr");
+  tr.appendChild(el("td", a));
+  tr.appendChild(el("td", b, cls));
+  tab.appendChild(tr);
+}
+
+async function laden() {
+  const t = Date.now();
+  const platz = document.getElementById("inhalt");
+  try {
+    const r = await fetch("data/latest.json?t=" + t);
+    if (!r.ok) throw new Error("Status " + r.status);
+    const d = await r.json();
+    platz.remove();
+
+    let k = karte("Hauptentscheidung");
+    const cls = d.entscheidung === "LONG" ? "LONG" : d.entscheidung === "SHORT" ? "SHORT" : "KEIN";
+    k.appendChild(el("div", d.entscheidung, "entscheidung " + cls));
+    k.appendChild(el("div", "Letzte Analyse: " + d.erstellt_berlin + " Uhr (Berlin) · Version " + d.version, "klein"));
+    const ul = document.createElement("ul");
+    d.grund.forEach(g => ul.appendChild(el("li", g)));
+    k.appendChild(ul);
+
+    k = karte("Kurse");
+    let tab = document.createElement("table");
+    if (d.bitget) {
+      zeile(tab, "Bitget XAUUSDT letzter Kurs", d.bitget.letzter_kurs + " $");
+      zeile(tab, "Markpreis / Index", d.bitget.markpreis + " / " + Number(d.bitget.indexpreis).toFixed(2));
+      zeile(tab, "Funding-Rate", d.bitget.funding_rate);
+      zeile(tab, "Zeitstempel (UTC)", d.bitget.zeitstempel_utc.slice(0, 19).replace("T", " "));
+    } else { zeile(tab, "Bitget", "nicht verfügbar", "fehler"); }
+    if (d.gc_yahoo) {
+      zeile(tab, "GC=F Schlusskurs " + d.gc_yahoo.datum, d.gc_yahoo.letzter_schlusskurs + " $");
+    } else { zeile(tab, "GC=F (Yahoo)", "nicht verfügbar", "fehler"); }
+    k.appendChild(tab);
+    k.appendChild(el("div", "Bitget bildet den Spotpreis ab, GC=F ist ein Futures-Kurs. Kleine Abweichungen sind normal.", "klein"));
+
+    k = karte("Status der Datenquellen");
+    tab = document.createElement("table");
+    Object.entries(d.quellen).forEach(([n, q]) =>
+      zeile(tab, n + ": " + q.detail, q.ok ? "OK" : "FEHLER", q.ok ? "ok" : "fehler"));
+    k.appendChild(tab);
+
+    if (Object.keys(d.fred).length) {
+      k = karte("Makrodaten (FRED)");
+      tab = document.createElement("table");
+      Object.values(d.fred).forEach(f => zeile(tab, f.name + " (" + f.datum + ")", String(f.wert)));
+      k.appendChild(tab);
+    }
+
+    if (d.warnungen.length) {
+      k = karte("Warnungen");
+      const w = document.createElement("ul");
+      d.warnungen.forEach(x => w.appendChild(el("li", x, "fehler")));
+      k.appendChild(w);
+    }
+
+    const rh = await fetch("data/history.json?t=" + t);
+    if (rh.ok) {
+      const h = (await rh.json()).slice().reverse().slice(0, 20);
+      k = karte("Bisherige Analysen");
+      tab = document.createElement("table");
+      h.forEach(x => zeile(tab, x.zeit, x.entscheidung + (x.bitget_kurs ? " · " + x.bitget_kurs + " $" : "")));
+      k.appendChild(tab);
+    }
+  } catch (e) {
+    platz.textContent = "Noch keine Analyse gefunden oder Fehler: " + e.message;
+  }
+}
+const hinweis = el("div", "Entscheidungshilfe, keine Gewinngarantie. Futures und Hebelprodukte können zum Totalverlust führen.", "klein");
+hinweis.id = "hinweis";
+document.body.appendChild(hinweis);
+laden();
+</script>
+</body>
+</html>
