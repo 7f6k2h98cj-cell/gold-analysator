@@ -1,0 +1,232 @@
+{
+  "erstellt_utc": "2026-10-28T23:24:40.473209+00:00",
+  "kosten_roundtrip_pct": 0.16,
+  "info": {
+    "wochen": 1341,
+    "erste_woche": "2000-11-13",
+    "letzte_woche": "2026-10-23",
+    "wochenrendite_std_pct": 2.32,
+    "anteil_steigende_wochen_pct": 55.5,
+    "ausreisser_ueber_8pct": 11
+  },
+  "ergebnisse": {
+    "Gesamt": {
+      "Immer LONG": {
+        "trades": 1341,
+        "trefferquote_pct": 52.6,
+        "avg_gewinn_pct": 1.61,
+        "avg_verlust_pct": -1.87,
+        "erwartung_pct": -0.037,
+        "t_wert": -0.59,
+        "gesamt_pct": -57.9,
+        "max_drawdown_pct": -81.6
+      },
+      "Immer SHORT": {
+        "trades": 1341,
+        "trefferquote_pct": 41.3,
+        "avg_gewinn_pct": 1.8,
+        "avg_verlust_pct": -1.75,
+        "erwartung_pct": -0.283,
+        "t_wert": -4.46,
+        "gesamt_pct": -98.4,
+        "max_drawdown_pct": -98.6
+      },
+      "Trend (SMA 10 Wochen)": {
+        "trades": 1341,
+        "trefferquote_pct": 48.2,
+        "avg_gewinn_pct": 1.68,
+        "avg_verlust_pct": -1.81,
+        "erwartung_pct": -0.125,
+        "t_wert": -1.97,
+        "gesamt_pct": -87.0,
+        "max_drawdown_pct": -89.9
+      },
+      "Momentum (4 Wochen)": {
+        "trades": 1341,
+        "trefferquote_pct": 47.6,
+        "avg_gewinn_pct": 1.68,
+        "avg_verlust_pct": -1.81,
+        "erwartung_pct": -0.149,
+        "t_wert": -2.35,
+        "gesamt_pct": -90.6,
+        "max_drawdown_pct": -92.0
+      }
+    },
+    "2001-2009": {
+      "Immer LONG": {
+        "trades": 459,
+        "trefferquote_pct": 55.8,
+        "avg_gewinn_pct": 1.75,
+        "avg_verlust_pct": -2.12,
+        "erwartung_pct": 0.042,
+        "t_wert": 0.35,
+        "gesamt_pct": 3.9,
+        "max_drawdown_pct": -42.9
+      },
+      "Immer SHORT": {
+        "trades": 459,
+        "trefferquote_pct": 37.7,
+        "avg_gewinn_pct": 2.13,
+        "avg_verlust_pct": -1.87,
+        "erwartung_pct": -0.362,
+        "t_wert": -3.01,
+        "gesamt_pct": -83.7,
+        "max_drawdown_pct": -85.0
+      },
+      "Trend (SMA 10 Wochen)": {
+        "trades": 459,
+        "trefferquote_pct": 48.8,
+        "avg_gewinn_pct": 1.83,
+        "avg_verlust_pct": -2.04,
+        "erwartung_pct": -0.149,
+        "t_wert": -1.24,
+        "gesamt_pct": -56.8,
+        "max_drawdown_pct": -65.5
+      },
+      "Momentum (4 Wochen)": {
+        "trades": 459,
+        "trefferquote_pct": 50.3,
+        "avg_gewinn_pct": 1.89,
+        "avg_verlust_pct": -1.98,
+        "erwartung_pct": -0.036,
+        "t_wert": -0.3,
+        "gesamt_pct": -27.2,
+        "max_drawdown_pct": -43.4
+      }
+    },
+    "2010-2019": {
+      "Immer LONG": {
+        "trades": 521,
+        "trefferquote_pct": 49.9,
+        "avg_gewinn_pct": 1.38,
+        "avg_verlust_pct": -1.67,
+        "erwartung_pct": -0.149,
+        "t_wert": -1.7,
+        "gesamt_pct": -58.6,
+        "max_drawdown_pct": -70.7
+      },
+      "Immer SHORT": {
+        "trades": 521,
+        "trefferquote_pct": 44.5,
+        "avg_gewinn_pct": 1.54,
+        "avg_verlust_pct": -1.54,
+        "erwartung_pct": -0.171,
+        "t_wert": -1.95,
+        "gesamt_pct": -63.1,
+        "max_drawdown_pct": -65.7
+      },
+      "Trend (SMA 10 Wochen)": {
+        "trades": 521,
+        "trefferquote_pct": 47.2,
+        "avg_gewinn_pct": 1.51,
+        "avg_verlust_pct": -1.55,
+        "erwartung_pct": -0.102,
+        "t_wert": -1.17,
+        "gesamt_pct": -47.2,
+        "max_drawdown_pct": -57.2
+      },
+      "Momentum (4 Wochen)": {
+        "trades": 521,
+        "trefferquote_pct": 46.6,
+        "avg_gewinn_pct": 1.48,
+        "avg_verlust_pct": -1.58,
+        "erwartung_pct": -0.153,
+        "t_wert": -1.74,
+        "gesamt_pct": -59.4,
+        "max_drawdown_pct": -63.1
+      }
+    },
+    "2020 bis heute": {
+      "Immer LONG": {
+        "trades": 355,
+        "trefferquote_pct": 52.4,
+        "avg_gewinn_pct": 1.76,
+        "avg_verlust_pct": -1.89,
+        "erwartung_pct": 0.022,
+        "t_wert": 0.17,
+        "gesamt_pct": -2.4,
+        "max_drawdown_pct": -42.1
+      },
+      "Immer SHORT": {
+        "trades": 355,
+        "trefferquote_pct": 41.4,
+        "avg_gewinn_pct": 1.83,
+        "avg_verlust_pct": -1.88,
+        "erwartung_pct": -0.342,
+        "t_wert": -2.67,
+        "gesamt_pct": -73.3,
+        "max_drawdown_pct": -78.6
+      },
+      "Trend (SMA 10 Wochen)": {
+        "trades": 355,
+        "trefferquote_pct": 48.7,
+        "avg_gewinn_pct": 1.75,
+        "avg_verlust_pct": -1.92,
+        "erwartung_pct": -0.129,
+        "t_wert": -1.0,
+        "gesamt_pct": -43.1,
+        "max_drawdown_pct": -54.9
+      },
+      "Momentum (4 Wochen)": {
+        "trades": 355,
+        "trefferquote_pct": 45.4,
+        "avg_gewinn_pct": 1.71,
+        "avg_verlust_pct": -1.96,
+        "erwartung_pct": -0.293,
+        "t_wert": -2.28,
+        "gesamt_pct": -68.3,
+        "max_drawdown_pct": -72.4
+      }
+    },
+    "Letzte 3 Jahre": {
+      "Immer LONG": {
+        "trades": 157,
+        "trefferquote_pct": 56.7,
+        "avg_gewinn_pct": 2.03,
+        "avg_verlust_pct": -2.05,
+        "erwartung_pct": 0.264,
+        "t_wert": 1.3,
+        "gesamt_pct": 43.9,
+        "max_drawdown_pct": -22.3
+      },
+      "Immer SHORT": {
+        "trades": 157,
+        "trefferquote_pct": 39.5,
+        "avg_gewinn_pct": 1.9,
+        "avg_verlust_pct": -2.21,
+        "erwartung_pct": -0.584,
+        "t_wert": -2.86,
+        "gesamt_pct": -62.2,
+        "max_drawdown_pct": -67.1
+      },
+      "Trend (SMA 10 Wochen)": {
+        "trades": 157,
+        "trefferquote_pct": 54.8,
+        "avg_gewinn_pct": 1.95,
+        "avg_verlust_pct": -2.15,
+        "erwartung_pct": 0.093,
+        "t_wert": 0.45,
+        "gesamt_pct": 9.8,
+        "max_drawdown_pct": -24.5
+      },
+      "Momentum (4 Wochen)": {
+        "trades": 157,
+        "trefferquote_pct": 53.5,
+        "avg_gewinn_pct": 1.91,
+        "avg_verlust_pct": -2.2,
+        "erwartung_pct": 0.003,
+        "t_wert": 0.01,
+        "gesamt_pct": -4.7,
+        "max_drawdown_pct": -28.4
+      }
+    }
+  },
+  "grenzen": [
+    "GC=F ist eine Front-Month-Reihe: Kontraktwechsel koennen Wochenrenditen verzerren.",
+    "Einstieg = erster Handelstag der Woche (Open), Ausstieg = letzter Handelstag (Close). Real kann der Kurs abweichen.",
+    "Kosten sind eine Annahme. Funding und Stop-Loss/Take-Profit sind hier nicht simuliert.",
+    "Bitget-XAUUSDT hat eine andere Historie. Dies ist ein Test auf Gold-Futures, nicht auf Bitget.",
+    "Ein t-Wert unter 2 bedeutet: Ergebnis ist von Zufall kaum zu unterscheiden.",
+    "Ergebnisse der Vergangenheit sagen nichts sicher ueber die Zukunft."
+  ]
+}
