@@ -1,0 +1,27 @@
+name: Volatilitaet
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  vol:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pakete installieren
+        run: pip install yfinance pandas numpy scikit-learn
+      - name: Volatilitaetstest
+        run: python voltest.py
+      - name: Ergebnis speichern
+        run: |
+          git config user.name "analyse-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add docs
+          git commit -m "Volatilitaet $(date -u +%Y-%m-%dT%H:%M:%SZ)" || echo "nichts zu speichern"
+          git push
