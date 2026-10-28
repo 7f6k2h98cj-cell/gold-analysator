@@ -1,20 +1,20 @@
 {
   "version": "0.1",
-  "erstellt_utc": "2026-10-28T23:06:45.462504+00:00",
-  "erstellt_berlin": "29.10.2026 00:06",
+  "erstellt_utc": "2026-10-28T23:28:27.808029+00:00",
+  "erstellt_berlin": "29.10.2026 00:28",
   "entscheidung": "KEIN TRADE",
   "grund": [
     "Version 0.1: Es ist noch kein Prognosemodell eingebaut. Diese Version prueft nur die Datenanbindung."
   ],
   "bitget": {
-    "letzter_kurs": 4060.56,
-    "markpreis": 4060.56,
-    "indexpreis": 4058.1382457984396,
-    "funding_rate": "0",
-    "zeitstempel_utc": "2026-10-28T23:06:46.053000+00:00"
+    "letzter_kurs": 4058.35,
+    "markpreis": 4058.35,
+    "indexpreis": 4055.7697546077216,
+    "funding_rate": "0.000013",
+    "zeitstempel_utc": "2026-10-28T23:28:28.785000+00:00"
   },
   "gc_yahoo": {
-    "letzter_schlusskurs": 4065.7,
+    "letzter_schlusskurs": 4068.2,
     "datum": "2026-10-28",
     "anzahl_tage": 6566,
     "erstes_datum": "2000-08-30"
@@ -55,7 +55,7 @@
     "Bitget XAUUSDT": {
       "ok": true,
       "detail": "Kurs ist -0.0 Minuten alt",
-      "datenstand_utc": "2026-10-28T23:06:46.053000+00:00"
+      "datenstand_utc": "2026-10-28T23:28:28.785000+00:00"
     },
     "FRED": {
       "ok": true,
