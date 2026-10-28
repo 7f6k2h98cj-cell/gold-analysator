@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Backtest</title>
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 16px;
+         max-width: 900px; margin-inline: auto; background: #111; color: #eee; }
+  h1 { font-size: 1.3rem; } h2 { font-size: 1rem; margin: 0 0 8px; }
+  .karte { background: #1c1c1e; border-radius: 14px; padding: 14px; margin-bottom: 12px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.82rem; white-space: nowrap; }
+  th, td { padding: 5px 8px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: #999; font-weight: 500; }
+  .klein { color: #999; font-size: 0.85rem; }
+  .pos { color: #34c759; } .neg { color: #ff453a; }
+</style>
+</head>
+<body>
+<h1>Backtest der Baselines</h1>
+<div class="klein"><a href="./" style="color:#d4a017">Zurück zum Bericht</a></div>
+<div id="platz" class="karte">Lade …</div>
+<script>
+function el(tag, text, cls) {
+  const e = document.createElement(tag);
+  if (text !== undefined) e.textContent = text;
+  if (cls) e.className = cls;
+  return e;
+}
+const spalten = [
+  ["trades", "Trades"], ["trefferquote_pct", "Treffer %"], ["avg_gewinn_pct", "Ø Gewinn %"],
+  ["avg_verlust_pct", "Ø Verlust %"], ["erwartung_pct", "Erw./Trade %"],
+  ["t_wert", "t-Wert"], ["gesamt_pct", "Gesamt %"], ["max_drawdown_pct", "Max DD %"]
+];
+async function laden() {
+  const platz = document.getElementById("platz");
+  try {
+    const r = await fetch("data/backtest.json?t=" + Date.now());
+    if (!r.ok) throw new Error("Status " + r.status);
+    const d = await r.json();
+    platz.remove();
+    let k = el("div", undefined, "karte");
+    k.appendChild(el("h2", "Datengrundlage"));
+    k.appendChild(el("div", d.info.wochen + " Wochen, " + d.info.erste_woche + " bis " + d.info.letzte_woche
+      + " · Wochenschwankung (Std.): " + d.info.wochenrendite_std_pct + " % · steigende Wochen: "
+      + d.info.anteil_steigende_wochen_pct + " % · Ausreißer über 8 %: " + d.info.ausreisser_ueber_8pct
+      + " · Kosten pro Trade (Annahme): " + d.kosten_roundtrip_pct + " %", "klein"));
+    document.body.appendChild(k);
+    Object.entries(d.ergebnisse).forEach(([periode, strategien]) => {
+      const c = el("div", undefined, "karte");
+      c.appendChild(el("h2", periode));
+      const t = document.createElement("table");
+      const kopf = document.createElement("tr");
+      kopf.appendChild(el("th", "Regel"));
+      spalten.forEach(s => kopf.appendChild(el("th", s[1])));
+      t.appendChild(kopf);
+      Object.entries(strategien).forEach(([name, v]) => {
+        const tr = document.createElement("tr");
+        tr.appendChild(el("td", name));
+        spalten.forEach(s => {
+          const wert = v ? v[s[0]] : null;
+          const cls = (s[0] === "erwartung_pct" || s[0] === "gesamt_pct") && wert !== null
+            ? (wert > 0 ? "pos" : "neg") : "";
+          tr.appendChild(el("td", wert === null || wert === undefined ? "–" : String(wert), cls));
+        });
+        t.appendChild(tr);
+      });
+      c.appendChild(t);
+      document.body.appendChild(c);
+    });
+    const g = el("div", undefined, "karte");
+    g.appendChild(el("h2", "Grenzen dieses Tests"));
+    const ul = document.createElement("ul");
+    d.grenzen.forEach(x => ul.appendChild(el("li", x, "klein")));
+    g.appendChild(ul);
+    document.body.appendChild(g);
+  } catch (e) {
+    platz.textContent = "Noch kein Backtest gefunden oder Fehler: " + e.message;
+  }
+}
+laden();
+</script>
+</body>
+</html>
