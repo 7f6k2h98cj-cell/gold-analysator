@@ -1,0 +1,29 @@
+name: Modelltest
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  modelltest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pakete installieren
+        run: pip install yfinance pandas numpy scikit-learn requests
+      - name: Modelltest
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: python modelltest.py
+      - name: Ergebnis speichern
+        run: |
+          git config user.name "analyse-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add docs
+          git commit -m "Modelltest $(date -u +%Y-%m-%dT%H:%M:%SZ)" || echo "nichts zu speichern"
+          git push
