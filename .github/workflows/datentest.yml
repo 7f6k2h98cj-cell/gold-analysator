@@ -1,0 +1,38 @@
+name: Datentest
+
+on:
+  workflow_dispatch:
+
+jobs:
+  daten:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pakete installieren
+        run: pip install yfinance requests
+      - name: Daten abrufen
+        run: |
+          python - <<'EOF'
+          import requests
+          print("=== Yahoo GC=F ===")
+          try:
+              import yfinance as yf
+              h = yf.Ticker("GC=F").history(period="1mo", interval="1d")
+              print("Zeilen:", len(h))
+              print(h[["Close"]].tail(3))
+          except Exception as e:
+              print("FEHLER Yahoo:", repr(e))
+          print("=== Bitget XAUUSDT ===")
+          try:
+              r = requests.get(
+                  "https://api.bitget.com/api/v2/mix/market/ticker",
+                  params={"symbol": "XAUUSDT", "productType": "USDT-FUTURES"},
+                  timeout=20,
+              )
+              print("Status:", r.status_code)
+              print(r.text[:600])
+          except Exception as e:
+              print("FEHLER Bitget:", repr(e))
+          EOF
