@@ -18,18 +18,25 @@
            text-decoration: none; margin-bottom: 12px; }
   .entscheidung { font-size: 2.2rem; font-weight: 800; text-align: center; padding: 12px 0; }
   .LONG { color: #34c759; } .SHORT { color: #ff453a; } .KEIN { color: #ffd60a; }
-  .ok { color: #34c759; } .fehler { color: #ff453a; }
-  .klein { color: #999; font-size: 0.85rem; }
+  .ok { color: #34c759; } .fehler { color: #ff453a; } .warn { color: #ffd60a; }
+  .klein { color: #999; font-size: 0.85rem; margin-top: 6px; }
   table { width: 100%; border-collapse: collapse; }
   td { padding: 4px 0; vertical-align: top; }
-  td:last-child { text-align: right; }
+  td:last-child { text-align: right; padding-left: 10px; }
   ul { margin: 0; padding-left: 18px; }
+  label { display: block; font-size: 0.85rem; color: #bbb; margin-top: 10px; }
+  input, select { width: 100%; box-sizing: border-box; font-size: 1.05rem; padding: 10px;
+                  border-radius: 10px; border: 1px solid #444; background: #111; color: #eee; }
+  .erg div { padding: 3px 0; }
+  a { color: #d4a017; }
 </style>
 </head>
 <body>
 <h1>Mein Gold-Futures-Analysator</h1>
 <a class="knopf" id="start" href="#">Neue Wochenanalyse starten</a>
 <div id="inhalt" class="karte">Lade …</div>
+<div class="klein" id="hinweis">Entscheidungshilfe, keine Gewinngarantie. Futures und Hebelprodukte können zum Totalverlust führen.
+  · <a href="backtest.html">Backtest</a></div>
 <script>
 const user = location.hostname.split(".")[0];
 const repo = location.pathname.split("/")[1] || "gold-analysator";
@@ -53,6 +60,92 @@ function zeile(tab, a, b, cls) {
   tr.appendChild(el("td", a));
   tr.appendChild(el("td", b, cls));
   tab.appendChild(tr);
+}
+function speichern(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function lesen(k, std) { try { const v = localStorage.getItem(k); return v === null ? std : v; } catch (e) { return std; } }
+
+function volKarte(v, preis) {
+  const k = karte("Erwartete Wochenspanne (Volatilität)");
+  const tab = document.createElement("table");
+  const alter = (Date.now() - Date.parse(v.erstellt_utc)) / 86400000;
+  if (v.freigabe && v.prognose) {
+    const p = v.prognose;
+    const d = new Date(p.basis_woche_bis + "T00:00:00");
+    do { d.setDate(d.getDate() + 1); } while (d.getDay() !== 1);
+    const ref = preis || p.letzter_wochenschluss_gc;
+    zeile(tab, "Prognose für die Woche ab", d.toLocaleDateString("de-DE"));
+    zeile(tab, "Erwartete Spanne (Hoch–Tief)",
+      p.erwartete_spanne_pct + " % (≈ " + Math.round(ref * p.erwartete_spanne_pct / 100) + " $)");
+    zeile(tab, "80-%-Bereich", p.spanne_80_von_pct + " bis " + p.spanne_80_bis_pct + " %");
+    zeile(tab, "Wahrscheinlichkeit starker Ausschlag (über " + p.schwelle_starker_ausschlag_pct + " %)",
+      Math.round(p.p_starker_ausschlag * 100) + " %");
+    zeile(tab, "Normalwert (Basisrate)", Math.round(p.basisrate_starker_ausschlag * 100) + " %");
+    k.appendChild(tab);
+    k.appendChild(el("div", "Getestet (Walk-forward, " + v.wochen_im_test + " Wochen): Brier "
+      + v.brier_modell + " vs. " + v.brier_basisrate + " (Basisrate); 80-%-Bereich traf in "
+      + v.abdeckung_80_pct + " % der Wochen. Gilt für GC=F, nicht exakt für Bitget. Sagt nichts über die Richtung.", "klein"));
+  } else {
+    k.appendChild(el("div", "Das Volatilitätsmodell ist nicht freigegeben. Keine Zahlen.", "warn"));
+  }
+  if (alter > 8) k.appendChild(el("div", "Achtung: Prognose ist " + Math.round(alter) + " Tage alt. Bitte neue Analyse starten.", "fehler"));
+}
+
+function rechnerKarte(preis, spanne) {
+  const k = karte("Positionsrechner (ohne Richtungsempfehlung)");
+  function feld(id, titel, wert, typ) {
+    k.appendChild(el("label", titel));
+    const i = document.createElement("input");
+    i.id = id; i.value = wert; i.inputMode = "decimal"; i.type = typ || "text";
+    i.addEventListener("input", rechnen);
+    k.appendChild(i);
+  }
+  feld("konto", "Kontostand (USDT)", lesen("konto", ""));
+  feld("risiko", "Risiko pro Trade (% vom Konto)", lesen("risiko", "1"));
+  k.appendChild(el("label", "Richtung"));
+  const s = document.createElement("select"); s.id = "richtung";
+  [["long", "LONG (Kauf)"], ["short", "SHORT (Verkauf)"]].forEach(o => {
+    const op = document.createElement("option"); op.value = o[0]; op.textContent = o[1]; s.appendChild(op);
+  });
+  s.addEventListener("change", rechnen); k.appendChild(s);
+  feld("einstieg", "Einstiegskurs ($)", preis ? String(preis) : "");
+  feld("stop", "Stop-Loss ($)", "");
+  feld("kosten", "Kosten pro Trade, hin und zurück (%) – Annahme", lesen("kosten", "0.16"));
+  const erg = el("div", undefined, "erg"); erg.id = "erg"; erg.style.marginTop = "12px";
+  k.appendChild(erg);
+  k.appendChild(el("div", "Berechnung ist eine Näherung. Liquidationspreis, Gebühren und Mindestgrößen immer in der Bitget-App prüfen. Ein Stop-Loss kann schlechter ausgeführt werden als geplant.", "klein"));
+
+  function num(id) { return parseFloat(String(document.getElementById(id).value).replace(",", ".")); }
+  function rechnen() {
+    const out = document.getElementById("erg");
+    out.textContent = "";
+    const E = num("konto"), r = num("risiko"), P = num("einstieg"), S = num("stop"), c = num("kosten") / 100;
+    const long = document.getElementById("richtung").value === "long";
+    if (isFinite(E)) speichern("konto", document.getElementById("konto").value);
+    if (isFinite(r)) speichern("risiko", document.getElementById("risiko").value);
+    if (isFinite(c)) speichern("kosten", document.getElementById("kosten").value);
+    function z(t, cls) { out.appendChild(el("div", t, cls)); }
+    if (!(E > 0) || !(r > 0) || !(P > 0) || !(S > 0) || !(c >= 0)) { z("Bitte Kontostand, Risiko, Einstieg und Stop eingeben."); return; }
+    if (long && S >= P) { z("Bei LONG muss der Stop unter dem Einstieg liegen.", "fehler"); return; }
+    if (!long && S <= P) { z("Bei SHORT muss der Stop über dem Einstieg liegen.", "fehler"); return; }
+    const dist = Math.abs(P - S) / P;
+    const risiko = E * r / 100;
+    const N = risiko / (dist + c);
+    const lev = N / E;
+    const L = Math.max(1, Math.ceil(lev));
+    const mmr = 0.005;
+    const liq = long ? P * (1 - 1 / L + mmr) : P * (1 + 1 / L - mmr);
+    z("Risiko in USDT: " + risiko.toFixed(2));
+    z("Stop-Abstand: " + (dist * 100).toFixed(2) + " %");
+    z("Positionswert: " + N.toFixed(2) + " USDT (≈ " + (N / P).toFixed(4) + " XAU)");
+    z("Benötigter Hebel: " + lev.toFixed(2) + "x (einzustellen: " + L + "x)");
+    z("Geschätzte Kosten: " + (N * c).toFixed(2) + " USDT");
+    z("Liquidation ca. bei: " + liq.toFixed(2) + " $ (Annahme: Wartungsmarge 0,5 %)");
+    if (lev > 3) z("Warnung: Hebel über 3x. Die Tests sprechen nicht für hohe Hebel.", "fehler");
+    const stopDistLiq = Math.abs(P - liq) / P;
+    if (dist > stopDistLiq * 0.7) z("Warnung: Stop liegt zu nah am Liquidationspreis.", "fehler");
+    if (spanne && dist * 100 < spanne / 2) z("Hinweis: Der Stop liegt innerhalb der normalen erwarteten Wochenschwankung (" + spanne + " %). Hohe Chance, ausgestoppt zu werden.", "warn");
+  }
+  rechnen();
 }
 
 async function laden() {
@@ -86,6 +179,18 @@ async function laden() {
     k.appendChild(tab);
     k.appendChild(el("div", "Bitget bildet den Spotpreis ab, GC=F ist ein Futures-Kurs. Kleine Abweichungen sind normal.", "klein"));
 
+    const preis = d.bitget ? d.bitget.letzter_kurs : null;
+    let spanne = null;
+    try {
+      const rv = await fetch("data/volatilitaet.json?t=" + t);
+      if (rv.ok) {
+        const v = await rv.json();
+        volKarte(v, preis);
+        if (v.freigabe && v.prognose) spanne = v.prognose.erwartete_spanne_pct;
+      }
+    } catch (e) {}
+    rechnerKarte(preis, spanne);
+
     k = karte("Status der Datenquellen");
     tab = document.createElement("table");
     Object.entries(d.quellen).forEach(([n, q]) =>
@@ -118,9 +223,6 @@ async function laden() {
     platz.textContent = "Noch keine Analyse gefunden oder Fehler: " + e.message;
   }
 }
-const hinweis = el("div", "Entscheidungshilfe, keine Gewinngarantie. Futures und Hebelprodukte können zum Totalverlust führen.", "klein");
-hinweis.id = "hinweis";
-document.body.appendChild(hinweis);
 laden();
 </script>
 </body>
