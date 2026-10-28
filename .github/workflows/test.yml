@@ -1,0 +1,11 @@
+name: Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  hallo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Python Test
+        run: python3 -c "print('Hallo, der Gold-Analysator laeuft!')"
