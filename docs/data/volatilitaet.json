@@ -1,0 +1,65 @@
+{
+  "erstellt_utc": "2026-10-28T23:38:27.995052+00:00",
+  "definition": "Starker Ausschlag = Wochenspanne (Hoch-Tief)/Open ueber dem 80. Perzentil der letzten 260 Wochen. Nur Vergangenheit.",
+  "testzeitraum": [
+    "2011-12-27",
+    "bis 2026"
+  ],
+  "wochen_im_test": 772,
+  "mae_modell_pct": 1.032,
+  "mae_naiv_pct": 1.116,
+  "abdeckung_80_pct": 81.9,
+  "brier_modell": 0.1486,
+  "brier_basisrate": 0.1765,
+  "logloss_modell": 0.4672,
+  "logloss_basisrate": 0.5403,
+  "kalibrierung": [
+    {
+      "bereich": "(0.0, 0.1]",
+      "wochen": 208,
+      "mittlere_prognose": 0.057,
+      "tatsaechlich": 0.077
+    },
+    {
+      "bereich": "(0.1, 0.2]",
+      "wochen": 248,
+      "mittlere_prognose": 0.147,
+      "tatsaechlich": 0.161
+    },
+    {
+      "bereich": "(0.2, 0.3]",
+      "wochen": 144,
+      "mittlere_prognose": 0.242,
+      "tatsaechlich": 0.285
+    },
+    {
+      "bereich": "(0.3, 0.4]",
+      "wochen": 78,
+      "mittlere_prognose": 0.342,
+      "tatsaechlich": 0.269
+    },
+    {
+      "bereich": "(0.4, 1.0]",
+      "wochen": 94,
+      "mittlere_prognose": 0.548,
+      "tatsaechlich": 0.543
+    }
+  ],
+  "pruefungen": {
+    "Brier besser als Basisrate": true,
+    "80-%-Bereich trifft zwischen 72 und 88 %": true,
+    "Spannen-Fehler kleiner als 26-Wochen-Durchschnitt": true
+  },
+  "freigabe": true,
+  "prognose": {
+    "basis_woche_bis": "2026-10-23",
+    "letzter_wochenschluss_gc": 4007.9,
+    "erwartete_spanne_pct": 4.05,
+    "spanne_80_von_pct": 2.44,
+    "spanne_80_bis_pct": 7.03,
+    "schwelle_starker_ausschlag_pct": 4.89,
+    "p_starker_ausschlag": 0.417,
+    "basisrate_starker_ausschlag": 0.247
+  },
+  "hinweis": "Basis ist GC=F (Futures). Bitget-XAUUSDT kann leicht abweichen."
+}
