@@ -28,5 +28,11 @@
     "entscheidung": "KEIN TRADE",
     "bitget_kurs": 4037.17,
     "datei": "history/20261029-102748.json"
+  },
+  {
+    "zeit": "29.10.2026 11:30",
+    "entscheidung": "KEIN TRADE",
+    "bitget_kurs": 4036.05,
+    "datei": "history/20261029-103000.json"
   }
 ]
