@@ -1,0 +1,68 @@
+{
+  "version": "0.1",
+  "erstellt_utc": "2026-10-29T10:27:48.895390+00:00",
+  "erstellt_berlin": "29.10.2026 11:27",
+  "entscheidung": "KEIN TRADE",
+  "grund": [
+    "Version 0.1: Es ist noch kein Prognosemodell eingebaut. Diese Version prueft nur die Datenanbindung."
+  ],
+  "bitget": {
+    "letzter_kurs": 4037.17,
+    "markpreis": 4037.17,
+    "indexpreis": 4034.7062256861614,
+    "funding_rate": "0.000086",
+    "zeitstempel_utc": "2026-10-29T10:27:49.691000+00:00"
+  },
+  "gc_yahoo": {
+    "letzter_schlusskurs": 4042.5,
+    "datum": "2026-10-29",
+    "anzahl_tage": 6567,
+    "erstes_datum": "2000-08-30"
+  },
+  "fred": {
+    "DFII10": {
+      "name": "Reale Rendite 10J (TIPS)",
+      "wert": 2.64,
+      "datum": "2026-10-27"
+    },
+    "DGS10": {
+      "name": "Rendite 10J Treasury",
+      "wert": 4.99,
+      "datum": "2026-10-27"
+    },
+    "DGS2": {
+      "name": "Rendite 2J Treasury",
+      "wert": 4.7,
+      "datum": "2026-10-27"
+    },
+    "DFF": {
+      "name": "Fed Funds Rate",
+      "wert": 3.88,
+      "datum": "2026-10-27"
+    },
+    "DTWEXBGS": {
+      "name": "US-Dollar-Index (breit)",
+      "wert": 121.3202,
+      "datum": "2026-10-23"
+    }
+  },
+  "quellen": {
+    "Yahoo GC=F": {
+      "ok": true,
+      "detail": "6567 Tageskerzen, letzte vom 2026-10-29 (kann unvollstaendig sein)",
+      "datenstand_utc": "2026-10-29"
+    },
+    "Bitget XAUUSDT": {
+      "ok": true,
+      "detail": "Kurs ist -0.0 Minuten alt",
+      "datenstand_utc": "2026-10-29T10:27:49.691000+00:00"
+    },
+    "FRED": {
+      "ok": true,
+      "detail": "alle 5 Serien ok",
+      "datenstand_utc": null
+    }
+  },
+  "warnungen": [],
+  "hinweis": "Entscheidungshilfe, keine Gewinngarantie."
+}
